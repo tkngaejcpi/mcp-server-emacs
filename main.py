@@ -12,6 +12,9 @@ lookup_emacs_variable_script = os.path.join(os.getcwd(), "lookup-emacs-variable.
 def get_emacs_executable():
     return shutil.which("emacs")
 
+def strip_script_output(text: str) -> str:
+    return "\n".join(text.split("\n")[1:])
+
 @mcp.tool()
 def is_emacs_available() -> bool:
     """
@@ -48,9 +51,7 @@ def lookup_emacs_function(function_name: str) -> str:
     ], check=True, capture_output=True, text=True)
 
 
-    stripped_result =  "\n".join(result.stderr.split("\n")[1:])
-
-    return stripped_result
+    return strip_script_output(result.stderr)
 
 @mcp.tool()
 def lookup_emacs_variable(variable_name: str) -> str:
@@ -76,9 +77,7 @@ def lookup_emacs_variable(variable_name: str) -> str:
         variable_name
     ],  check=True, capture_output=True, text=True)
 
-    stripped_result =  "\n".join(result.stderr.split("\n")[1:])
-
-    return stripped_result
+    return strip_script_output(result.stderr)
 
 if __name__ == "__main__":
     mcp.run()
