@@ -15,6 +15,16 @@ def get_emacs_executable():
 def strip_script_output(text: str) -> str:
     return "\n".join(text.split("\n")[1:])
 
+def run_elisp_script(emacs_exec: str, script_path: str, *args: str) -> str:
+    result = subprocess.run([
+        emacs_exec,
+        "--script",
+        script_path,
+        *args
+    ], check=True, capture_output=True, text=True)
+    
+    return strip_script_output(result.stderr)
+
 @mcp.tool()
 def is_emacs_available() -> bool:
     """
@@ -42,16 +52,8 @@ def lookup_emacs_function(function_name: str) -> str:
 
     if emacs_exec == None:
         return "Emacs is not available."
-    
-    result = subprocess.run([
-        emacs_exec,
-        "--script",
-        lookup_emacs_function_script,
-        function_name
-    ], check=True, capture_output=True, text=True)
 
-
-    return strip_script_output(result.stderr)
+    return run_elisp_script(emacs_exec, lookup_emacs_function_script, function_name)
 
 @mcp.tool()
 def lookup_emacs_variable(variable_name: str) -> str:
@@ -70,14 +72,7 @@ def lookup_emacs_variable(variable_name: str) -> str:
     if emacs_exec == None:
         return "Emacs is not available."
     
-    result = subprocess.run([
-        emacs_exec,
-        "--script",
-        lookup_emacs_variable_script,
-        variable_name
-    ],  check=True, capture_output=True, text=True)
-
-    return strip_script_output(result.stderr)
+    return run_elisp_script(emacs_exec, lookup_emacs_variable_script, variable_name)
 
 if __name__ == "__main__":
     mcp.run()
