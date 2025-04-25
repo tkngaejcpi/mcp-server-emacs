@@ -45,7 +45,7 @@ def lookup_emacs_function(function_name: str) -> str:
         function_name: The name of the function.
 
     Returns:
-        The string of the documentation, or a message.
+        The documentation, or a message.
     """
     
     emacs_exec = get_emacs_executable()
@@ -64,7 +64,7 @@ def lookup_emacs_variable(variable_name: str) -> str:
         variable_name: The name of the variable.
 
     Returns:
-        The string of the documentation, or a message.
+        The documentation, or a message.
     """
     
     emacs_exec = get_emacs_executable()
